@@ -1,4 +1,4 @@
-  const goods = [
+const goods = [
   { title: 'Shirt', price: 150 },
   { title: 'Socks', price: 50 },
   { title: 'Jacket', price: 350 },
@@ -9,24 +9,19 @@
   const GET_GOODS_ITEMS = `${BASE_URL}catalogData.json`
   const GET_BASKET_GOODS_ITEMS = `${BASE_URL}getBasket.json`
 
-  function service(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-  xhr.send();
-  xhr.onload = () => {
-  if (xhr.readyState === 4) {
-  callback(JSON.parse(xhr.response))
-  }
-  }
+  function service(url) {
+  return fetch(url)
+    .then((res) => res.json())
 }
 
-  class GoodsItem {
+
+class GoodsItem {
   constructor({ product_name, price }) {
-    this.product_name = product_name;
-    this.price = price;
+  this.product_name = product_name;
+  this.price = price;
   }
   render() {
-    return `
+  return `
   <div class="goods-item">
   <h3>${this.product_name}</h3>
   <p>${this.price}</p>
@@ -35,15 +30,15 @@
   }
 }
 
-  class GoodsList {
+class GoodsList {
   items = [];
   filteredItems = []
   fetchGoods(callback) {
-    service(GET_GOODS_ITEMS, (data) => {
+  service(GET_GOODS_ITEMS, (data) => {
   this.items = data;
   this.filteredItems = data;
   callback()
-    });
+  });
   }
   filterItems(value) {
   this.filteredItems = this.items.filter(({ product_name }) => {
@@ -55,7 +50,6 @@
   return prev + price;
   }, 0)
   }
-
   render() {
   const goods = this.filteredItems.map(item => {
   const goodItem = new GoodsItem(item);
@@ -66,7 +60,7 @@
   }
 }
 
-  class BasketGoodsList {
+class BasketGoodsList {
   items = [];
   fetchGoods() {
   service(GET_BASKET_GOODS_ITEMS, (data) => {
